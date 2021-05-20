@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-04-20T15:15:48.702297+00:00",
+  "timestamp": "2021-05-20T17:11:29.384587+00:00",
   "repo": "cfrg/draft-irtf-cfrg-hpke",
   "labels": [
     {
@@ -2404,6 +2404,63 @@
           "body": "Turns out I was using SECP256K1 instead of  X9_62_PRIME256V1 inside OpenSSL. All working now, thanks!",
           "createdAt": "2021-02-16T03:57:33Z",
           "updatedAt": "2021-02-16T03:57:33Z"
+        }
+      ]
+    },
+    {
+      "number": 218,
+      "id": "MDU6SXNzdWU4NjgxOTk4MTQ=",
+      "title": "Improve test vector field descriptions",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-hpke/issues/218",
+      "state": "OPEN",
+      "author": "kaduk",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "editorial"
+      ],
+      "body": "The test vectors include (for example) fields like \"ikmE\", \"ikmR\", and \"ikmS\", whereas the main body of the document only uses the unadorned \"ikm\".  Some modest description of what the variant fields are holding seems like it would improve the usability of the test vectors.",
+      "createdAt": "2021-04-26T21:01:33Z",
+      "updatedAt": "2021-04-28T12:51:28Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "FredericJacobs",
+          "authorAssociation": "NONE",
+          "body": "Agreed that the naming of the test vectors is a bit cryptic and would benefit from being better aligned with the spec. Also the meaning of some letters for the encoded version would be welcome since I don't think it is spelled out in the spec.",
+          "createdAt": "2021-04-27T10:50:26Z",
+          "updatedAt": "2021-04-27T10:50:26Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks Ben! We'll clean this up in the next version. ",
+          "createdAt": "2021-04-27T12:22:24Z",
+          "updatedAt": "2021-04-27T12:22:24Z"
+        }
+      ]
+    },
+    {
+      "number": 219,
+      "id": "MDU6SXNzdWU4ODQ3MTA3MTM=",
+      "title": "Recipient vs. receiver inconsistency",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-hpke/issues/219",
+      "state": "OPEN",
+      "author": "davidben",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The draft uses \"recipient\" everywhere except for one place in section 3:\r\n\r\n> (skX, pkX): A Key Encapsulation Mechanism (KEM) key pair used in role X, where X is one of S, R, or E as sender, receiver, and ephemeral, respectively; skX is the private key and pkX is the public key.\r\n\r\nI probably would have gone with \"receiver\" as the analog of sender, though I don't know what the existing discussion or precedents are. (I don't believe either term appears in KDF labels, so this doesn't change the primitive itself.)\r\n\r\n(CC @agl)",
+      "createdAt": "2021-05-10T17:33:37Z",
+      "updatedAt": "2021-05-10T18:19:08Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks, @davidben! We'll fix this in the next version.",
+          "createdAt": "2021-05-10T18:19:08Z",
+          "updatedAt": "2021-05-10T18:19:08Z"
         }
       ]
     }
@@ -15990,24 +16047,102 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjE5NDE0Mjc1",
       "title": "Address Frank's feedback.",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-hpke/pull/217",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "chris-wood",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "cc @blipp, @jedisct1 ",
       "createdAt": "2021-04-20T15:14:43Z",
-      "updatedAt": "2021-04-20T15:14:43Z",
+      "updatedAt": "2021-04-20T22:00:30Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-hpke",
       "baseRefName": "master",
       "baseRefOid": "3e6ec3528ed828074f75ab444739194c105df23e",
       "headRepository": "cfrg/draft-irtf-cfrg-hpke",
       "headRefName": "caw/frank-review",
-      "headRefOid": "6385b3011422b359549c8bc25d2fbac72ef9a990",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "ceb70aba9908e1f5c03ba37320ee1f5f87a8c412",
+      "closedAt": "2021-04-20T22:00:30Z",
+      "mergedAt": "2021-04-20T22:00:30Z",
+      "mergedBy": "chris-wood",
+      "mergeCommit": {
+        "oid": "cd168424dbf7a8921825ac9c24864f06dc040599"
+      },
+      "comments": [
+        {
+          "author": "jedisct1",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Perfect!\n\nThanks a lot for addressing these!",
+          "createdAt": "2021-04-20T15:57:06Z",
+          "updatedAt": "2021-04-20T15:57:06Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjQwMTM1MjY1",
+          "commit": {
+            "abbreviatedOid": "6385b30"
+          },
+          "author": "blipp",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "Thanks Chris, this looks good to me. Two minor comments in the limits paragraph, because sometimes we say that it is in bytes, and sometimes we don't.",
+          "createdAt": "2021-04-20T15:48:36Z",
+          "updatedAt": "2021-04-20T15:50:45Z",
+          "comments": [
+            {
+              "originalPosition": 44,
+              "body": "```suggestion\r\n`suite_id` in bytes and equals 5 for DHKEM (relevant for `ikm`) and 10 for the\r\n```",
+              "createdAt": "2021-04-20T15:48:58Z",
+              "updatedAt": "2021-04-20T15:51:43Z"
+            },
+            {
+              "originalPosition": 46,
+              "body": "```suggestion\r\nand `size_input_label` is the size in bytes of the label used as parameter to\r\n```",
+              "createdAt": "2021-04-20T15:49:51Z",
+              "updatedAt": "2021-04-20T15:51:43Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjQwNDU2ODcw",
+          "commit": {
+            "abbreviatedOid": "ceb70ab"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-04-20T21:55:13Z",
+          "updatedAt": "2021-04-20T21:55:13Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 220,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjQ2NzMyNjY1",
+      "title": "Update hpke-rs to 08 in README.md",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-hpke/pull/220",
+      "state": "MERGED",
+      "author": "franziskuskiefer",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2021-05-18T13:02:38Z",
+      "updatedAt": "2021-05-20T17:10:38Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-hpke",
+      "baseRefName": "master",
+      "baseRefOid": "cd168424dbf7a8921825ac9c24864f06dc040599",
+      "headRepository": "franziskuskiefer/draft-irtf-cfrg-hpke",
+      "headRefName": "patch-3",
+      "headRefOid": "79f8e2264455fee705b400c836dbb3affe7ea57d",
+      "closedAt": "2021-05-20T17:10:38Z",
+      "mergedAt": "2021-05-20T17:10:38Z",
+      "mergedBy": "chris-wood",
+      "mergeCommit": {
+        "oid": "2e23e57abff41f900347adf0072d088c20f2e64f"
+      },
       "comments": [],
       "reviews": []
     }
