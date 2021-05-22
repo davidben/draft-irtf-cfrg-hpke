@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-05-20T17:11:29.384587+00:00",
+  "timestamp": "2021-05-22T12:00:00.351347+00:00",
   "repo": "cfrg/draft-irtf-cfrg-hpke",
   "labels": [
     {
@@ -2461,6 +2461,44 @@
           "body": "Thanks, @davidben! We'll fix this in the next version.",
           "createdAt": "2021-05-10T18:19:08Z",
           "updatedAt": "2021-05-10T18:19:08Z"
+        }
+      ]
+    },
+    {
+      "number": 221,
+      "id": "MDU6SXNzdWU4OTcxNDg1NTY=",
+      "title": "KEM failures and API considerations",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-hpke/issues/221",
+      "state": "OPEN",
+      "author": "chris-wood",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This issue tracks two related questions:\r\n\r\n1. How should HPKE deal with implicit KEM failures? Should it raise errors early on (during context creation) or only when trying to decrypt data?\r\n2. Not all KEMs have an immediate \"is this key valid\" check, such as those based on lattices. How should the spec accommodate those?\r\n\r\nCurrently, context creation is fallible, which would need to change if the answer to both (1) and (2) is \"only fail during the AEAD operation\" (I think).\r\n\r\ncc @davidben, @martinthomson, @jedisct1, @bifurcation, @rozbb (please feel free to tag other implementers!)",
+      "createdAt": "2021-05-20T17:12:18Z",
+      "updatedAt": "2021-05-20T18:05:17Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "beurdouche",
+          "authorAssociation": "NONE",
+          "body": "As discussed privately, my intuition is that dealing with implicit KEM failures only at decryption time might be simpler for applications anyway at the cost of the decryption attempt. Plus it sounds like current security proofs handle only perfectly correct KEMs outside of the DHKEM variant atm (@blipp can correct me if I am wrong).",
+          "createdAt": "2021-05-20T17:39:27Z",
+          "updatedAt": "2021-05-20T17:39:27Z"
+        },
+        {
+          "author": "rozbb",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Are there any KEMs which have explicit Decap failures? We have the X25519 zero-check, but plenty of people think it's not necessary, so I could imagine removing it. I just glanced at Kyber, Frodo, SIKE, NTRU, McElice, and SABER, and all of them return a non-null value on Decaps (notably, the last 3 do have failure conditions, but they output something pseudorandom when that condition is reached).\r\n\r\nAs for implicit failures, this is something that we have plenty of already. For example, X25519AuthDecap currently produces the wrong symmetric key if given the wrong sender pubkey, and this is only detectable at the AEAD stage. We could theoretically push the error to the Decap stage by including a test payload with every encapped key. This would perhaps let users catch Auth/PSK errors more easily, and also detect implicit failures due to (extremely low probability) correctness errors like in FrodoKEM. The downside is that this would increase the size of encapsulated keys by 112-150%.",
+          "createdAt": "2021-05-20T17:49:14Z",
+          "updatedAt": "2021-05-20T17:49:14Z"
+        },
+        {
+          "author": "davidben",
+          "authorAssociation": "NONE",
+          "body": "As an implementor, I don't think moving the failure makes sense. I suppose an implementation could move it if it *really* wanted to, but it doesn't seem like a good idea. (While the spec does specify operations, how exactly that manifests in your programming language is necessarily an implementation question. There are many considerations around the type system, how you want to represent HPKE ciphers, naming, etc.)\r\n\r\nFirst, I don't think the X25519 zero-check is that controversial. TLS mandates it, so I expect any TLS-adjacent implementation to use it. It should stay. HPKE also supports P-256, where both point-at-infinity and point-on-curve checks are quite well-established. (And necessary! Missing the point-on-curve check has the usual implications with uncompressed coordinates. Even with compressed coordinates, not every compressed input successfully finds a square root. Missing the point-at-infinity check means the output secret is not even defined.)\r\n\r\nSecond, Encap and Decap can fail for every KEM. Even ignoring failures inside the KEM, most of our programming languages do not have sufficiently strong type systems to reject keys and enc values of the wrong length at the type level. Even where they are strong enough, that's just shifting the check to the caller. At the end of the day, your protocol probably sends a variable-length string somewhere. Or the KEM may need to serialize something in a way that doesn't span the whole `[N]byte` space.\r\n\r\nFinally, you'd need to shift the failure to not just decryption, but also encryption (if the recipient public key is wrong) and export. Those do not have as natural of error cases as decryption, so shifting the error seems more error-prone.",
+          "createdAt": "2021-05-20T18:03:02Z",
+          "updatedAt": "2021-05-20T18:05:17Z"
         }
       ]
     }
@@ -16143,6 +16181,32 @@
       "mergeCommit": {
         "oid": "2e23e57abff41f900347adf0072d088c20f2e64f"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 222,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjUwNjE2OTQz",
+      "title": "Unify around recipient.",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-hpke/pull/222",
+      "state": "OPEN",
+      "author": "chris-wood",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #219.",
+      "createdAt": "2021-05-22T11:59:45Z",
+      "updatedAt": "2021-05-22T11:59:45Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-hpke",
+      "baseRefName": "master",
+      "baseRefOid": "2e23e57abff41f900347adf0072d088c20f2e64f",
+      "headRepository": "cfrg/draft-irtf-cfrg-hpke",
+      "headRefName": "caw/unify-recipient",
+      "headRefOid": "1eb941873d759ee2b55927e413aaafe399330828",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
